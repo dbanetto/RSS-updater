@@ -1,5 +1,6 @@
-c:\users\david\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\bin\Debug\RSSUpdate.exe
-c:\users\david\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\bin\Debug\RSSUpdate.pdb
 c:\users\david\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\david\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\obj\x86\Debug\RSSUpdate.exe
-c:\users\david\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\obj\x86\Debug\RSSUpdate.pdb
+C:\Users\David\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\bin\Debug\Update.exe.config
+C:\Users\David\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\bin\Debug\Update.exe
+C:\Users\David\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\bin\Debug\Update.pdb
+C:\Users\David\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\obj\x86\Debug\Update.exe
+C:\Users\David\documents\visual studio 2010\Projects\C#\rssupdate\rssupdate\obj\x86\Debug\Update.pdb
