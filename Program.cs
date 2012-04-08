@@ -14,10 +14,18 @@ namespace rssupdate
          * {*} optional
          * 
          * RSSUpdate.exe [feed:url] [application path] {-f}
-         * -l local file
-         * -f : force update, even if the application is up to date it will be updated
-         * 
+         * -f : force update, even if the application is up to date it will be updated.
         */
+
+        /*
+         * RSS feed format:
+         * <app>[Appliction name]</app>
+         * <ver>[Version #]</ver>
+         * <loc>[Location of update]</loc>
+         * <bat>[0:1 enable update.bat false:true]</bat>
+         */
+
+        private static bool EnableBatch = false;
         static void Main(string[] args)
         {
             bool isNewer = false;
@@ -51,6 +59,11 @@ namespace rssupdate
             }
 
             string[] nw = ReadXML(args[0]);
+            if (nw[3].StartsWith("1"))
+            {
+                EnableBatch = true;
+            }
+
             string[] cur = ReadXML(args[1] + "\\version.xml");
             if (nw[0] != cur[0])
             {
@@ -87,8 +100,6 @@ namespace rssupdate
             {
             }
 
-
-
             try
             {
                 //Download update(which is stored in an archive.)
@@ -98,12 +109,22 @@ namespace rssupdate
                 try
                 {
                     extractArchive(nw[2].Substring(nw[2].LastIndexOf('/') + 1));
+                    /*
+                     * This runs update.bat if it exists. This enables extra funcutionality while updating.
+                     * Enablebatch is dervired from the rss feed and is for security and stop random update.bat
+                     * being run and only enabbles this feature when demaned.
+                     */
+
+                    if (System.IO.File.Exists("update.bat") && EnableBatch)
+                    {
+                        System.Diagnostics.Process.Start("update.bat");
+                    }
                 }
                 catch
                 {
                     Console.WriteLine("7za.exe not found. Downloading it now.");
                     downloadFile(@"http://dl.dropbox.com/u/40387717/7za.exe");
-                    Console.WriteLine("Application restart required.");
+                    Console.WriteLine("Update requires restart.");
                     return;
                 }
             }
@@ -145,27 +166,37 @@ namespace rssupdate
             string path = System.IO.Directory.GetCurrentDirectory() + '\\' + URI.Substring(URI.LastIndexOf('/') + 1);
             webcli.DownloadFile(URI,  path);
         }
-
         #endregion
         /*
          *ReadXML output:
          *  [0] Application name.
          *  [1] Application Version.
          *  [2] Download Location.
+         *  [3] update.bat enabled
         */
         static string[] ReadXML(string path)
         {
-            update.RssWrapper doc = new update.RssWrapper(path);
-            string[] str = new string[3];
-            XmlNode Lastestnode = doc.getNewestItem();
-            str[0] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "app").InnerText;
-            str[1] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "ver").InnerText;
-            str[2] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "loc").InnerText;
-            return str;
+            try
+            {
+                update.RssWrapper doc = new update.RssWrapper(path);
+                string[] str = new string[3];
+                XmlNode Lastestnode = doc.getNewestItem();
+                str[0] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "app").InnerText;
+                str[1] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "ver").InnerText;
+                str[2] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "loc").InnerText;
+                str[3] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "bat").InnerText;
+                return str;
+            }
+            catch
+            {
+                Console.Write("Error while parsing rss feed.");
+                Environment.Exit(1);
+                return new string[] {""};
+            }
         }
         static void extractArchive(string path)
         {
-            System.Diagnostics.Process.Start("7za.exe", " e 7za920.zip -aoa");
+            System.Diagnostics.Process.Start("7za.exe", " e " + path + " -aoa");
         }
     }
 }

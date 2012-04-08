@@ -6,7 +6,7 @@ using System.Xml.Schema;
 
 namespace update
 {
-    /*xml(XmlTextReader/XmlDocument) wrapper for getting elements via xPath*/
+    /*xml (XmlDocument) wrapper for getting elements via xPath*/
     public class XmlDocWrapper
     {
         /*Locals*/
