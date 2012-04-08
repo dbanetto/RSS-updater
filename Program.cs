@@ -67,7 +67,7 @@ namespace rssupdate
                 for (int i = 0; i < cur.Length; i++)
                 {
                     //cycles through each part of the version *.*.*.* can compares them.
-                    //if the nw is greater in any of them it is decleared updated.
+                    //if the nw is greater in any of them it is considered newer and a updated version.
                     if (int.Parse(nwtmp[i]) > int.Parse(curtmp[i]))
                     {
                         isNewer = true;
@@ -85,7 +85,6 @@ namespace rssupdate
             }
             else
             {
-                Console.WriteLine("Forcing Update");
             }
 
 
@@ -156,24 +155,13 @@ namespace rssupdate
         */
         static string[] ReadXML(string path)
         {
-            XmlTextReader xml = new XmlTextReader(path);
-            string[] outp = new string[3];
-            while (xml.Read())
-            {
-                if (xml.Name == "app")
-                {
-                    outp[0] = xml.ReadElementContentAsString();
-                }
-                else if (xml.Name == "ver")
-                {
-                    outp[1] = xml.ReadElementContentAsString();
-                }
-                else if (xml.Name == "loc")
-                {
-                    outp[2] = xml.ReadElementContentAsString();
-                }
-            }
-            return outp;
+            update.RssWrapper doc = new update.RssWrapper(path);
+            string[] str = new string[3];
+            XmlNode Lastestnode = doc.getNewestItem();
+            str[0] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "app").InnerText;
+            str[1] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "ver").InnerText;
+            str[2] = update.XmlDocWrapper.getChild(Lastestnode.ChildNodes, "loc").InnerText;
+            return str;
         }
         static void extractArchive(string path)
         {
