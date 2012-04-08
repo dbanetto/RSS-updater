@@ -1,0 +1,11 @@
+Key:
+[*] needed 
+{*} optional
+RSSUpdate.exe [feed:url] [application path] {-f}
+-f : force update, even if the application is up to date it will be updated.
+
+RSS feed format:
+<app>[Appliction name]</app>
+<ver>[Version #]</ver>
+<loc>[Location of update]</loc>
+<bat>[0:1 enable update.bat false:true]</bat>
